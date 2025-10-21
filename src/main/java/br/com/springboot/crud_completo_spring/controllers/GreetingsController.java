@@ -7,20 +7,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- *
- * A sample greetings controller to return greeting text
- */
-@RestController
+@RestController // permite a realização de requisições REST
 public class GreetingsController {
-    /**
-     *
-     * @param name the name to greet
-     * @return greeting text
-     */
-    @RequestMapping(value = "/{name}", method = RequestMethod.GET)
+
+    //@RequestMapping(value = "/{name}", method = RequestMethod.GET) // URL padrão '{}' significa que é uma variável
+	@RequestMapping(value = "/mostrarnome/{name}", method = RequestMethod.GET) // URL específica(modificada por mim)
     @ResponseStatus(HttpStatus.OK)
     public String greetingText(@PathVariable String name) {
-        return "Hello " + name + "!";
+        return "CRUD  Spring Boot REST API: " + name + "!";
     }
+	
+	// criando segundo método
+	@RequestMapping(value = "/olamundo/{umNome}") // mapeamento de requisição, pelo valor da URL
+	@ResponseStatus(HttpStatus.OK) // tipo de resposta esperado
+	public String metodoRetornaString(@PathVariable String umNome ) { // anotação do spring
+	
+		return "Olá Mundo: " + umNome;
+	}
 }
