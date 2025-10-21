@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,45 +22,67 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.springboot.crud_completo_spring.model.Usuario;
 import br.com.springboot.crud_completo_spring.repository.UsuarioRepository;
 
-@RestController // permite a realização de requisições REST
+@RestController
 public class GreetingsController {
 
-	// declarar o usuário repository
-	@Autowired(required=true) // CD ou CDI -> indica a injeção de dependência
+
+	@Autowired(required=true)
 	private UsuarioRepository usuarioRepository;
 	
-	// criando o método de listar usuários
-	@GetMapping(value="listatodos") // indica o mapeamento pela requisição
-	@ResponseBody // retorna os dados para o corpo da resposta
+
+	@GetMapping(value="listatodos")
+	@ResponseBody
 	public ResponseEntity<List<Usuario>> listar() {
-		// 1. percorrer todos os dados da tabela Usuario
-		List<Usuario> usuarios = usuarioRepository.findAll(); // executa a consulta
+
+		List<Usuario> usuarios = usuarioRepository.findAll();
 		
-		// 2. retornar a resposta e retornar seu status. 
-		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK); // retorna a lista em JSON
+		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
 	}
 	
-	// método de salvar
-	@PostMapping(value= "salvar") // indica o mapeamento da url
-	@ResponseBody // indica a descrição da resposta
-	public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario) { // recebe os dados para salvar
+	@PostMapping(value= "salvar")
+	@ResponseBody
+	public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario) {
 		
-		// 1. pega o novo usuário e salva
 		Usuario user =  usuarioRepository.save(usuario);
 		
-		// 2. retorna novo objeto salvo
 		return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
 	}
 	
-	// método para deletar
+	@PutMapping(value = "atualizar")
+	@ResponseBody
+	public ResponseEntity<?> atualizar(@RequestBody Usuario usuario) { // retorno genério (retorna qualquer tipo)
+		
+		if (usuario.getId() == null) {
+			return new ResponseEntity<String>("Id não foi informado", HttpStatus.OK);
+		}
+		
+		Usuario user = usuarioRepository.saveAndFlush(usuario);
+		
+		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
+	}
+	
+	
+	
 	@DeleteMapping(value="deletar")
 	@ResponseBody
-	public ResponseEntity<String> deletar(@RequestParam Long usuarioId) { // indica a passagem de parâmetro
+	public ResponseEntity<String> deletar(@RequestParam Long usuarioId) {
 		
 		usuarioRepository.deleteById(usuarioId);
 		
 		return new ResponseEntity<String>("User deletado com sucesso", HttpStatus.OK);
 	}
+	
+	@GetMapping(value="buscaruserid")
+	@ResponseBody
+	public ResponseEntity<Usuario> buscarUserId(@RequestParam(name = "userId") Long userId) {
+		
+		// 1. buscar o usuário pelo id
+		Usuario usuario = usuarioRepository.findById(userId).get();
+		
+		// 2. retornar o usuário buscando com sucesso
+		return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
+	}
+	
 	
 	
 	
