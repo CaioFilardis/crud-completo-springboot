@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,27 +26,6 @@ public class GreetingsController {
 	@Autowired(required=true) // CD ou CDI -> indica a injeção de dependência
 	private UsuarioRepository usuarioRepository;
 	
-	
-    //@RequestMapping(value = "/{name}", method = RequestMethod.GET) // URL padrão '{}' significa que é uma variável
-	@RequestMapping(value = "/mostrarnome/{name}", method = RequestMethod.GET) // URL específica(modificada por mim)
-    @ResponseStatus(HttpStatus.OK)
-    public String greetingText(@PathVariable String name) {
-        return "CRUD  Spring Boot REST API: " + name + "!";
-    }
-	
-	// criando segundo método
-	@RequestMapping(value = "/olamundo/{umNome}") // mapeamento de requisição, pelo valor da URL
-	@ResponseStatus(HttpStatus.OK) // tipo de resposta esperado
-	public String metodoRetornaString(@PathVariable String umNome ) { // anotação do spring
-	
-		Usuario usuario = new Usuario(); // instancia o objeto
-		usuario.setName(umNome);
-		
-		usuarioRepository.save(usuario); // grava no banco
-		
-		return "Olá Mundo: " + umNome;
-	}
-	
 	// criando o método de listar usuários
 	@GetMapping(value="listatodos") // indica o mapeamento pela requisição
 	@ResponseBody // retorna os dados para o corpo da resposta
@@ -55,4 +36,17 @@ public class GreetingsController {
 		// 2. retornar a resposta e retornar seu status. 
 		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK); // retorna a lista em JSON
 	}
+	
+	// método de salvar
+	@PostMapping(value= "salvar") // indica o mapeamento da url
+	@ResponseBody // indica a descrição da resposta
+	public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario) { // recebe os dados para salvar
+		
+		// 1. pega o novo usuário e salva
+		Usuario user =  usuarioRepository.save(usuario);
+		
+		// 2. retorna novo objeto salvo
+		return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
+	}
+	
 }
