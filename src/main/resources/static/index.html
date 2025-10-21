@@ -31,7 +31,7 @@
 					<div class="card-header">Gerenciamento de Usuários</div>
 					<div class="card-body p-4 p-md-5">
 
-						<form id="formUsuario">
+						<form id="formUsuario" onsubmit="salvarUsuario(event)">
 
 							<div class="mb-4">
 								<label for="id" class="form-label">ID</label>
@@ -50,21 +50,22 @@
 									placeholder="Digite a idade" required>
 							</div>
 							
-							<!-- Botões -->
-
 							<div
 								class="d-flex justify-content-center btn-group-custom flex-wrap">
 
-								<button type="button" class="btn btn-primary me-3 mb-2 mb-md-0" onclick="salvarUsuario()">
+								<button type="submit" class="btn btn-primary me-3 mb-2 mb-md-0">
 									<i class="bi bi-save me-2"></i>Salvar
 								</button>
 								<button type="submit"
 									class="btn btn-secondary me-3 mb-2 mb-md-0">
 									<i class="bi bi-file-earmark-plus me-2"></i>Novo
 								</button>
-								<button type="button" class="btn btn-info me-3 mb-2 mb-md-0">
+								
+								<button type="button" class="btn btn-info me-3 mb-2 mb-md-0" 
+										data-bs-toggle="modal" data-bs-target="#modalPesquisa">
 									<i class="bi bi-search me-2"></i>Pesquisar
 								</button>
+								
 								<button type="button" class="btn btn-danger mb-2 mb-md-0">
 									<i class="bi bi-trash me-2"></i>Deletar
 								</button>
@@ -75,49 +76,293 @@
 			</div>
 		</div>
 	</div>
+	
+	
+	<div class="modal fade" id="modalPesquisa" tabindex="-1" aria-labelledby="modalPesquisaLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg"> <div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="modalPesquisaLabel">Pesquisar Usuário</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		  </div>
+		  <div class="modal-body">
+			
+			<div class="row mb-3">
+				<div class="col-md-9">
+					<label for="input-busca-nome" class="form-label">Buscar por Nome:</label>
+					<input type="text" class="form-control" id="input-busca-nome" placeholder="Digite o nome para buscar...">
+				</div>
+				<div class="col-md-3 d-flex align-items-end">
+					<button type="button" class="btn btn-primary w-100" id="btn-buscar-modal">
+						<i class="bi bi-search me-1"></i> Buscar
+					</button>
+				</div>
+			</div>
+			
+			<hr>
+			
+			<h5>Resultados:</h5>
+			<div class="table-responsive">
+				<table class="table table-striped table-hover" id="tabela-resultados">
+					<thead>
+						<tr>
+							<th scope="col">ID</th>
+							<th scope="col">Nome</th>
+							<th scope="col">Idade</th>
+							<th scope="col">Ação</th>
+						</tr>
+					</thead>
+					<tbody>
+						</tbody>
+				</table>
+			</div>
 
-	<!-- jQuery CDN -->
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<div class="modal fade" id="modalEdicao" tabindex="-1" aria-labelledby="modalEdicaoLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="modalEdicaoLabel">Editar Usuário</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		  </div>
+		  <div class="modal-body">
+			
+			<form id="formEdicao" onsubmit="salvarEdicao(event)">
+
+				<div class="mb-4">
+					<label for="id-edicao" class="form-label">ID</label>
+					<input type="text" class="form-control" id="id-edicao" name="id" readonly>
+				</div>
+
+				<div class="mb-4">
+					<label for="nome-edicao" class="form-label">Nome do usuário</label>
+					<input type="text" class="form-control" id="nome-edicao" name="nome" placeholder="Digite o nome completo" required>
+				</div>
+
+				<div class="mb-4">
+					<label for="idade-edicao" class="form-label">Idade</label>
+					<input type="number" class="form-control" id="idade-edicao" name="idade" placeholder="Digite a idade" required>
+				</div>
+				
+				<div class="modal-footer p-0 pt-3">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-primary">
+						<i class="bi bi-save me-2"></i>Salvar Alterações
+					</button>
+				</div>
+			</form>
+			
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	
+	<script
+		src="https://code.jquery.com/jquery-3.7.1.min.js"
 		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
 		crossorigin="anonymous"></script>
 		
-	<!-- Bootstrap -->	
 	<script
-		src="https://cdn.jsdelivr.nptm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
 		
 	<script type="text/javascript">
-		function salvarUsuario() {
+	
+		// Instâncias dos Modais Bootstrap (necessário para controle via JS)
+		var modalPesquisa;
+		var modalEdicao;
+	
+		/*
+		 * Função 1: Salvar (APENAS NOVO USUÁRIO)
+		 * (Disparada pelo formulário principal)
+		 */
+		function salvarUsuario(event) {
+			
+			event.preventDefault(); // Impede que o formulário recarregue a página
 			
 			var id = $("#id").val();
 			var nome = $("#nome").val();
 			var idade = $("#idade").val();
 			
-			/* ajax - requisição */
+			// Este formulário agora só deve salvar NOVOS usuários
+			// A edição foi movida para o modal 'salvarEdicao'
+			if (id != null && id.trim() != '') {
+				alert("Para ATUALIZAR um usuário, primeiro use o botão 'Pesquisar'.");
+				return; // Para a execução
+			}
+			
+			var usuario = {
+					name: nome,
+					idade: idade
+			};
+
 			$.ajax({
-				method: "POST", // 'POST' ou 'PUT'
-				url: "salvar",   // '/salvar' ou '/atualizar'
-				data: JSON.stringify({
+				method: 'POST', // Salvar é sempre POST
+				url: 'salvar',   
+				data: JSON.stringify(usuario), 
+				contentType: "application/json; charset=utf-8", 
+				
+				success: function (response) {
+					alert("Usuário salvo com sucesso!");
+					$("#id").val(response.id); // Preenche o ID no form principal
+				},
+				error: function (xhr, status, errorThrown) {
+					alert("Erro ao salvar usuário: " + xhr.responseText);
+				}
+			});
+		}
+		
+		
+		/*
+		 * =======================================================
+		 * ============ FUNÇÕES DO FLUXO DE PESQUISA E EDIÇÃO ============
+		 * =======================================================
+		 */
+		 
+		// Executa quando o documento HTML estiver pronto
+		$(document).ready(function() {
+		
+			// Inicializa as instâncias dos modais para podermos controlá-los
+			modalPesquisa = new bootstrap.Modal(document.getElementById('modalPesquisa'));
+			modalEdicao = new bootstrap.Modal(document.getElementById('modalEdicao'));
+		
+			/*
+			 * Função 2: Buscar por Nome (Dentro do Modal de Pesquisa)
+			 * Disparada quando o botão 'btn-buscar-modal' é clicado
+			 */
+			$("#btn-buscar-modal").on("click", function() {
+				
+				var nomePesquisado = $("#input-busca-nome").val();
+				
+				if (nomePesquisado != null && nomePesquisado.trim() != '') {
+					
+					// Chamada AJAX para o endpoint 'buscarpornome'
+					$.ajax({
+						method: "GET",
+						url: "buscarpornome",
+						data: { name: nomePesquisado }, // Envia como @RequestParam
+						
+						success: function(response) {
+							// 'response' é a sua List<Usuario>
+							
+							// 1. Limpa a tabela de resultados
+							$("#tabela-resultados > tbody").empty();
+							
+							// 2. Verifica se encontrou resultados
+							if (response.length > 0) {
+								
+								// 3. Itera sobre a lista e adiciona na tabela
+								response.forEach(function(usuario) {
+									var newRow = '<tr>' + 
+													'<td>' + usuario.id + '</td>' + 
+													'<td>' + usuario.name + '</td>' + 
+													'<td>' + usuario.idade + '</td>' + 
+													'<td>' +
+														// Botão de edição que guarda os dados
+														'<button type="button" class="btn btn-warning btn-sm btn-selecionar-edicao" ' +
+																'data-id="' + usuario.id + '" ' +
+																'data-nome="' + usuario.name + '" ' +
+																'data-idade="' + usuario.idade + '">' +
+															'<i class="bi bi-pencil-square me-1"></i> Editar' +
+														'</button>' +
+													'</td>' +
+												 '</tr>';
+									
+									$("#tabela-resultados > tbody").append(newRow);
+								});
+								
+							} else {
+								// Caso não encontre usuários
+								var noResultRow = '<tr><td colspan="4" class="text-center">Nenhum usuário encontrado.</td></tr>';
+								$("#tabela-resultados > tbody").append(noResultRow);
+							}
+						},
+						error: function(xhr, status, errorThrown) {
+							alert("Erro ao buscar usuários: " + xhr.responseText);
+						}
+					});
+				}
+			});
+			
+			
+			/*
+			 * Função 3: Selecionar para Edição (Botão 'Editar' da tabela)
+			 * *** MODIFICADO PARA ABRIR O NOVO MODAL ***
+			 */
+			$("#tabela-resultados").on("click", ".btn-selecionar-edicao", function() {
+				
+				// 1. Pega os dados armazenados no botão
+				var id = $(this).data("id");
+				var nome = $(this).data("nome");
+				var idade = $(this).data("idade");
+				
+				// 2. Popula o formulário do MODAL DE EDIÇÃO
+				$("#id-edicao").val(id);
+				$("#nome-edicao").val(nome);
+				$("#idade-edicao").val(idade);
+				
+				// 3. Fecha o Modal de Pesquisa
+				modalPesquisa.hide();
+				
+				// 4. Abre o Novo Modal de Edição
+				modalEdicao.show();
+			});
+			
+		}); // Fim do $(document).ready
+		
+		
+		/*
+		 * Função 4: Salvar Edição (Formulário do Modal de Edição)
+		 * *** ESTA É A NOVA FUNÇÃO ***
+		 */
+		function salvarEdicao(event) {
+			
+			event.preventDefault(); // Impede que o formulário recarregue a página
+			
+			// Pega os dados do formulário DO MODAL
+			var id = $("#id-edicao").val();
+			var nome = $("#nome-edicao").val();
+			var idade = $("#idade-edicao").val();
+			
+			var usuario = {
 					id: id,
 					name: nome,
 					idade: idade
-					}), // Converte o objeto JS em uma string JSON
-				contentType: "application/json; charset=utf-8", // Informa à API que estamos enviando JSON
-				
-				// 4. Callback de Sucesso
-				success: function (response) {
-					
-					$("#id").val(response.id);
-					
-					// 'response' é o objeto Usuario que a API retornou
-					alert("Usuário salvo com sucesso!");
-				}
-			}).fail(function (xhr, status, errorThrown) {
-				alert("Erro ao salvar: " + xhr.responseText);
-			});
+			};
 			
+			// Chama o endpoint de ATUALIZAR
+			$.ajax({
+				method: 'PUT', // Atualizar é sempre PUT
+				url: 'atualizar',   
+				data: JSON.stringify(usuario), 
+				contentType: "application/json; charset=utf-8", 
+				
+				success: function (response) {
+					alert("Usuário atualizado com sucesso!");
+					
+					// 1. Fecha o modal de edição
+					modalEdicao.hide();
+					
+					// 2. (Bônus) Atualiza o form principal se for o mesmo usuário
+					if ($("#id").val() == response.id) {
+						$("#nome").val(response.name);
+						$("#idade").val(response.idade);
+					}
+				},
+				error: function (xhr, status, errorThrown) {
+					alert("Erro ao atualizar usuário: " + xhr.responseText);
+				}
+			});
 		}
+
 	</script>
 		
 </body>
