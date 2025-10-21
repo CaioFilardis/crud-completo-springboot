@@ -1,10 +1,16 @@
 package br.com.springboot.crud_completo_spring.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,5 +43,16 @@ public class GreetingsController {
 		usuarioRepository.save(usuario); // grava no banco
 		
 		return "Olá Mundo: " + umNome;
+	}
+	
+	// criando o método de listar usuários
+	@GetMapping(value="listatodos") // indica o mapeamento pela requisição
+	@ResponseBody // retorna os dados para o corpo da resposta
+	public ResponseEntity<List<Usuario>> listar() {
+		// 1. percorrer todos os dados da tabela Usuario
+		List<Usuario> usuarios = usuarioRepository.findAll(); // executa a consulta
+		
+		// 2. retornar a resposta e retornar seu status. 
+		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK); // retorna a lista em JSON
 	}
 }
