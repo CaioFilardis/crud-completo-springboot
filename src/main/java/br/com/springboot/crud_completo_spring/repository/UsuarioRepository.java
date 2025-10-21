@@ -1,6 +1,9 @@
 package br.com.springboot.crud_completo_spring.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.springboot.crud_completo_spring.model.Usuario;
@@ -8,4 +11,7 @@ import br.com.springboot.crud_completo_spring.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	 
+	// Busca customizada
+	@Query(value = "select u from Usuario u where upper(trim(u.name)) like %?1%")
+	List<Usuario> buscarPorNome(String name);
 }

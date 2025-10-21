@@ -19,6 +19,8 @@ public class Usuario implements Serializable {
 	
 	private String name;
 	private int idade;
+	
+	
 	public Long getId() {
 		return id;
 	}

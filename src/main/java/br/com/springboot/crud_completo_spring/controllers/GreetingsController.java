@@ -29,6 +29,8 @@ public class GreetingsController {
 	@Autowired(required=true)
 	private UsuarioRepository usuarioRepository;
 	
+	
+	// ----- EndPoints ----
 
 	@GetMapping(value="listatodos")
 	@ResponseBody
@@ -50,7 +52,7 @@ public class GreetingsController {
 	
 	@PutMapping(value = "atualizar")
 	@ResponseBody
-	public ResponseEntity<?> atualizar(@RequestBody Usuario usuario) { // retorno genério (retorna qualquer tipo)
+	public ResponseEntity<?> atualizar(@RequestBody Usuario usuario) {
 		
 		if (usuario.getId() == null) {
 			return new ResponseEntity<String>("Id não foi informado", HttpStatus.OK);
@@ -60,8 +62,6 @@ public class GreetingsController {
 		
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
 	}
-	
-	
 	
 	@DeleteMapping(value="deletar")
 	@ResponseBody
@@ -83,6 +83,15 @@ public class GreetingsController {
 		return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
 	}
 	
+	
+	@GetMapping(value="buscarpornome")
+	@ResponseBody
+	public ResponseEntity<List<Usuario>> buscarUserId(@RequestParam(name = "name") String name) {
+
+		List<Usuario> usuario = usuarioRepository.buscarPorNome(name.trim().toUpperCase());
+		
+		return new ResponseEntity<List<Usuario>>(usuario, HttpStatus.OK);
+	}
 	
 	
 	
