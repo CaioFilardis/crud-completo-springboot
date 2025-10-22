@@ -102,8 +102,6 @@ Para rodar este projeto localmente, siga os passos abaixo:
 
 ## 📸 Screenshots da Aplicação
 
-*(**Nota do seu especialista em marketing:** Este é o ponto mais importante! Tire screenshots nítidos e adicione aqui. Um README irresistível **MOSTRA** o resultado.)*
-
 **Adicione aqui imagens de:**
 1.  O formulário principal de cadastro.
 2.  O modal de pesquisa com os resultados na tabela.
