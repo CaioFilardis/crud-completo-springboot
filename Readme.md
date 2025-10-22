@@ -111,7 +111,7 @@ Para rodar este projeto localmente, siga os passos abaixo:
 4.  O modal de confirmação de deleção.
 
 **Exemplo:**
-`![Screenshot do Formulário](src/main/resources/static/img/Formulario.png)`
+![Screenshot do Formulário](src/main/resources/static/img/Formulario.png)
 
 ---
 
@@ -121,8 +121,6 @@ Projeto desenvolvido como um portfólio de habilidades em desenvolvimento Full-S
 
 Feito com ❤️ por **Caio Filardis**.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/caiofilardis/) 
-
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/CaioFilardis)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/caiofilardis/)  [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/CaioFilardis)
 
 ----
